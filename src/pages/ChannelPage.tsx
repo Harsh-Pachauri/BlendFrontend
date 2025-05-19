@@ -29,6 +29,7 @@ const ChannelPage = () => {
 
   const [channel, setChannel] = useState<Channel | null>(null);
   const [videos, setVideos] = useState<Video[]>([]);
+  const [playlists, setPlaylists] = useState<any[]>([]);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [activeTab, setActiveTab] = useState('videos');
 
@@ -53,11 +54,29 @@ const ChannelPage = () => {
           throw new Error('Failed to fetch channel data');
         }
 
-const data = await res.json();
-console.log(data);
-setChannel(data.data.channel);
-console.log(channel)
-setVideos(Array.isArray(data.data.videos) ? data.data.videos : []);
+        const data = await res.json();
+        console.log(data);
+        setChannel(data.data.channel);
+        console.log(channel)
+        setVideos(Array.isArray(data.data.videos) ? data.data.videos : []);
+
+
+        // 👇 Fetch playlists once channel ID is available
+        if (data.data.channel?._id) {
+          const playlistRes = await fetch(`http://localhost:8001/api/v1/playlists/user/${data.data.channel._id}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authToken}`,
+            },
+          });
+
+          if (!playlistRes.ok) throw new Error('Failed to fetch playlists');
+
+          const playlistData = await playlistRes.json();
+          setPlaylists(playlistData.data); // 👈 Update playlists state
+        }
+
+
 
       } catch (error) {
         console.error('Error fetching channel data:', error);
@@ -127,11 +146,10 @@ setVideos(Array.isArray(data.data.videos) ? data.data.videos : []);
             {['videos', 'playlists', 'about'].map((tab) => (
               <button
                 key={tab}
-                className={`pb-4 px-2 font-medium ${
-                  activeTab === tab
+                className={`pb-4 px-2 font-medium ${activeTab === tab
                     ? 'text-primary-600 border-b-2 border-primary-600'
                     : 'text-gray-600'
-                }`}
+                  }`}
                 onClick={() => setActiveTab(tab)}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -149,21 +167,21 @@ setVideos(Array.isArray(data.data.videos) ? data.data.videos : []);
                 className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition"
               >
                 <Link key={video._id} to={`/watch/${video._id}`}>
-                <div className="aspect-video">
-                  <img
-                    src={video.thumbnail}
-                    alt={video.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 mb-1">{video.title}</h3>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <span>{video.views.toLocaleString()} views</span>
-                    <span className="mx-1">•</span>
-                    <span>{new Date(video.createdAt).toLocaleDateString()}</span>
+                  <div className="aspect-video">
+                    <img
+                      src={video.thumbnail}
+                      alt={video.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-gray-900 mb-1">{video.title}</h3>
+                    <div className="flex items-center text-sm text-gray-500">
+                      <span>{video.views.toLocaleString()} views</span>
+                      <span className="mx-1">•</span>
+                      <span>{new Date(video.createdAt).toLocaleDateString()}</span>
+                    </div>
+                  </div>
                 </Link>
               </div>
             ))}
@@ -171,8 +189,36 @@ setVideos(Array.isArray(data.data.videos) ? data.data.videos : []);
         )}
 
         {activeTab === 'playlists' && (
-          <div className="text-center text-gray-500 py-20">No playlists yet.</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {playlists.length > 0 ? (
+              playlists.map((playlist) => (
+                        <Link
+          to={`/playlists/${playlist._id}`}
+          key={playlist._id}
+          className="block bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition"
+        >
+
+                <div
+                  key={playlist._id}
+                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition"
+                >
+                  <div className="aspect-video bg-gray-100 flex items-center justify-center text-gray-400">
+                    🎵 Playlist
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-gray-900 mb-1">{playlist.name}</h3>
+                    <p className="text-sm text-gray-500">{playlist.description}</p>
+                  </div>
+                </div>
+                    </Link>
+              ))
+
+            ) : (
+              <div className="text-center text-gray-500 py-20 w-full col-span-full">No playlists yet.</div>
+            )}
+          </div>
         )}
+
         {activeTab === 'about' && (
           <div className="text-center text-gray-500 py-20">About section coming soon.</div>
         )}

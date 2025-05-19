@@ -6,27 +6,79 @@ const EditPlaylistPage = () => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    title: '',
+    name: '',
     description: '',
     isPrivate: false,
   });
 
-  useEffect(() => {
-    // TODO: Fetch playlist data
-  }, [playlistId]);
+useEffect(() => {
+  const fetchPlaylist = async () => {
+    try {
+      const response = await fetch(`http://localhost:8001/api/v1/playlists/${playlistId}`, {
+        credentials: 'include',
+      });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement playlist update
-    navigate(`/playlists/${playlistId}`);
-  };
+      if (!response.ok) {
+        throw new Error('Failed to fetch playlist');
+      }
 
-  const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this playlist?')) {
-      // TODO: Implement playlist deletion
-      navigate('/playlists');
+      const result = await response.json();
+      const { name, description, isPrivate } = result.data;
+      setFormData({ name, description, isPrivate });
+    } catch (err) {
+      console.error(err);
+      alert('Error loading playlist data.');
     }
   };
+
+  if (playlistId) fetchPlaylist();
+}, [playlistId]);
+
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const response = await fetch(`http://localhost:8001/api/v1/playlists/${playlistId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update playlist');
+    }
+
+    navigate(`/playlists/${playlistId}`);
+  } catch (error) {
+    console.error(error);
+    alert('Failed to update playlist.');
+  }
+};
+
+
+  const handleDelete = async () => {
+  if (confirm('Are you sure you want to delete this playlist?')) {
+    try {
+      const response = await fetch(`http://localhost:8001/api/v1/playlists/${playlistId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete playlist');
+      }
+
+      navigate('/playlists');
+    } catch (error) {
+      console.error(error);
+      alert('Failed to delete playlist.');
+    }
+  }
+};
+
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -43,13 +95,13 @@ const EditPlaylistPage = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
+          <label className="block text-sm font-medium mb-1">Name</label>
           <input
             type="text"
             required
             className="input"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
         </div>
 

@@ -5,15 +5,35 @@ import { Plus } from 'lucide-react';
 const NewPlaylistPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    title: '',
+    name: '',
     description: '',
     isPrivate: false,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement playlist creation
-    navigate('/playlists');
+
+    try {
+      const response = await fetch('http://localhost:8001/api/v1/playlists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // include cookies for auth if needed
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || 'Failed to create playlist');
+      }
+
+      const data = await response.json();
+      navigate(`/playlists/${data.data._id}`);
+    } catch (error: any) {
+      console.error(error);
+      alert(error.message || 'Failed to create playlist.');
+    }
   };
 
   return (
@@ -24,20 +44,26 @@ const NewPlaylistPage = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
+          <label htmlFor="name" className="block text-sm font-medium mb-1">
+            name
+          </label>
           <input
+            id="name"
             type="text"
             required
             className="input"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            placeholder="Enter playlist title"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="Enter playlist name"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Description</label>
+          <label htmlFor="description" className="block text-sm font-medium mb-1">
+            Description
+          </label>
           <textarea
+            id="description"
             className="input min-h-[100px]"
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -66,7 +92,7 @@ const NewPlaylistPage = () => {
           >
             Cancel
           </button>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary flex items-center">
             <Plus className="w-5 h-5 mr-2" />
             Create Playlist
           </button>
