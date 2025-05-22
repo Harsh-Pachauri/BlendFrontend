@@ -19,7 +19,7 @@ const LoginPage = () => {
 
     try {
       const res = await axios.post(
-        'http://localhost:8001/api/v1/users/login',
+        'https://blend-backend.vercel.app//api/v1/users/login',
         { email, password },
         {
           headers: { 'Content-Type': 'application/json' },

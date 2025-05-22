@@ -25,7 +25,7 @@ const SaveToPlaylistModal = ({ videoId, onClose }: { videoId: string; onClose: (
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8001/api/v1/playlists/user/${user?._id}`, { withCredentials: true })
+      .get(`https://blend-backend.vercel.app//api/v1/playlists/user/${user?._id}`, { withCredentials: true })
       .then((res) => setPlaylists(res.data.data))
       .catch(() => alert('Failed to fetch playlists'))
       .finally(() => setLoading(false));
@@ -34,7 +34,7 @@ const SaveToPlaylistModal = ({ videoId, onClose }: { videoId: string; onClose: (
   const handleAddToPlaylist = async (playlistId: string) => {
     try {
       await axios.patch(
-        `http://localhost:8001/api/v1/playlists/${playlistId}/add/${videoId}`,
+        `https://blend-backend.vercel.app//api/v1/playlists/${playlistId}/add/${videoId}`,
         { videoId },
         { withCredentials: true }
       );

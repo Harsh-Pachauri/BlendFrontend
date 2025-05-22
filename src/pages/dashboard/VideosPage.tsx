@@ -27,7 +27,7 @@ const VideosPage = () => {
 
     const fetchVideos = async () => {
       try {
-        const res = await fetch(`http://localhost:8001/api/v1/users/c/${user.username}`, {
+        const res = await fetch(`https://blend-backend.vercel.app//api/v1/users/c/${user.username}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${authToken}`,
@@ -50,7 +50,7 @@ const VideosPage = () => {
 
   const togglePublish = async (videoId: string) => {
     try {
-      const res = await fetch(`http://localhost:8001/api/v1/videos/${videoId}/toggle-publish`, {
+      const res = await fetch(`https://blend-backend.vercel.app//api/v1/videos/${videoId}/toggle-publish`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -159,7 +159,7 @@ const VideosPage = () => {
                           onClick={() => togglePublish(video._id)}
                         >
                           if(video.isPublished=='true'){
-                            
+
                           }
                           {video.visibility}
                         </button>

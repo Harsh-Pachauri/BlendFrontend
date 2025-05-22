@@ -20,7 +20,7 @@ const SettingsPage = () => {
 
 const handleSaveProfile = async () => {
   try {
-    const res = await fetch('http://localhost:8001/api/v1/users/update-account', {
+    const res = await fetch('https://blend-backend.vercel.app//api/v1/users/update-account', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const handleSaveProfile = async () => {
     formData.append('avatar', avatarFile);
 
     try {
-      const res = await fetch('http://localhost:8001/api/v1/users/avatar', {
+      const res = await fetch('https://blend-backend.vercel.app//api/v1/users/avatar', {
         method: 'PATCH',
         credentials: 'include',
         body: formData,
@@ -66,7 +66,7 @@ const handleSaveProfile = async () => {
     formData.append('coverImage', coverFile);
 
     try {
-      const res = await fetch('http://localhost:8001/api/v1/users/cover-image', {
+      const res = await fetch('https://blend-backend.vercel.app//api/v1/users/cover-image', {
         method: 'PATCH',
         credentials: 'include',
         body: formData,
@@ -87,7 +87,7 @@ const handleSaveProfile = async () => {
     }
 
     try {
-      const res = await fetch('http://localhost:8001/api/v1/users/change-password', {
+      const res = await fetch('https://blend-backend.vercel.app//api/v1/users/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
