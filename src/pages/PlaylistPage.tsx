@@ -33,7 +33,7 @@ const PlaylistPage = () => {
 
   const fetchPlaylist = async () => {
     try {
-      const res = await axios.get(`http://localhost:8001/api/v1/playlists/${playlistId}`, {
+      const res = await axios.get(`https://blend-backend.vercel.app/api/v1/playlists/${playlistId}`, {
         withCredentials: true,
       });
       setPlaylist(res.data.data);
@@ -48,7 +48,7 @@ const PlaylistPage = () => {
     if (!playlistId) return;
     try {
       await axios.patch(
-        `http://localhost:8001/api/v1/playlists/${playlistId}/remove/${videoId}`,
+        `https://blend-backend.vercel.app/api/v1/playlists/${playlistId}/remove/${videoId}`,
         { withCredentials: true }
       );
       // Re-fetch the updated playlist

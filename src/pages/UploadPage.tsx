@@ -63,7 +63,7 @@ const UploadPage = () => {
     if (file) form.append("video", file);
 
     try {
-      const res = await fetch("http://localhost:8001/api/v1/videos/publish", {
+      const res = await fetch("https://blend-backend.vercel.app/api/v1/videos/publish", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

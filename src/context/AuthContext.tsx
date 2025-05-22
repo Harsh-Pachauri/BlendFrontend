@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const fetchCurrentUser = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get('http://localhost:8001/api/v1/users/current-user');
+        const res = await axios.get('https://blend-backend.vercel.app/api/v1/users/current-user');
         if (res.data?.data) {
           setUser(res.data.data);
         } else {
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      const res = await axios.post('http://localhost:8001/api/v1/users/login', {
+      const res = await axios.post('https://blend-backend.vercel.app/api/v1/users/login', {
         email,
         password,
       });
@@ -105,7 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (userData.avatar) formData.append('avatar', userData.avatar);
       if (userData.coverImage) formData.append('coverImage', userData.coverImage);
 
-      const res = await axios.post('http://localhost:8001/api/v1/users/register', formData, {
+      const res = await axios.post('https://blend-backend.vercel.app/api/v1/users/register', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -121,7 +121,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     try {
       setIsLoading(true);
-      await axios.post('http://localhost:8001/api/v1/users/logout');
+      await axios.post('https://blend-backend.vercel.app/api/v1/users/logout');
       setUser(null); // This will trigger the `useEffect` above to show updated value
           // Clear localStorage
     localStorage.removeItem('refreshToken');
@@ -137,7 +137,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateUserProfile = async (data: Partial<User>) => {
     try {
       setIsLoading(true);
-      const res = await axios.patch('http://localhost:8001/api/v1/users/update', data);
+      const res = await axios.patch('https://blend-backend.vercel.app/api/v1/users/update', data);
       setUser(res.data.data);
     } catch (error) {
       console.error('Profile update error', error);

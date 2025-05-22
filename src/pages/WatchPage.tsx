@@ -49,12 +49,12 @@ const WatchPage = () => {
   useEffect(() => {
     if (!videoId) return;
 
-    fetch(`http://localhost:8001/api/v1/videos/${videoId}`)
+    fetch(`https://blend-backend.vercel.app/api/v1/videos/${videoId}`)
       .then((res) => res.json())
       .then((data) => setVideo(data.data))
       .catch((err) => console.error('Failed to fetch video:', err));
 
-    fetch('http://localhost:8001/api/v1/videos')
+    fetch('https://blend-backend.vercel.app/api/v1/videos')
       .then((res) => res.json())
       .then((data) => setRecommended(data.videos || []))
       .catch((err) => console.error('Failed to fetch recommended:', err));
