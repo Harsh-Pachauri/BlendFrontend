@@ -14,7 +14,7 @@ const EditPlaylistPage = () => {
 useEffect(() => {
   const fetchPlaylist = async () => {
     try {
-      const response = await fetch(`https://blend-backend.vercel.app//api/v1/playlists/${playlistId}`, {
+      const response = await fetch(`https://blend-backend.vercel.app/api/v1/playlists/${playlistId}`, {
         credentials: 'include',
       });
 
@@ -38,7 +38,7 @@ useEffect(() => {
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   try {
-    const response = await fetch(`https://blend-backend.vercel.app//api/v1/playlists/${playlistId}`, {
+    const response = await fetch(`https://blend-backend.vercel.app/api/v1/playlists/${playlistId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   const handleDelete = async () => {
   if (confirm('Are you sure you want to delete this playlist?')) {
     try {
-      const response = await fetch(`https://blend-backend.vercel.app//api/v1/playlists/${playlistId}`, {
+      const response = await fetch(`https://blend-backend.vercel.app/api/v1/playlists/${playlistId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
