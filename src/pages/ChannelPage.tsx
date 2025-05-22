@@ -51,7 +51,7 @@ const ChannelPage = () => {
       if (!channel?._id || !user?._id) return;
 
       try {
-        const res = await fetch(`https://blend-backend.vercel.app/api/v1/subscriptions/c/${user._id}`, {
+        const res = await fetch(`http://localhost:8001/api/v1/subscriptions/c/${user._id}`, {
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${authToken}`, // ✅ Add this
@@ -75,7 +75,7 @@ const ChannelPage = () => {
 
     try {
       const res = await fetch(
-        `https://blend-backend.vercel.app/api/v1/subscriptions/c/${user._id}/${channel._id}`,
+        `http://localhost:8001/api/v1/subscriptions/c/${user._id}/${channel._id}`,
         {
           method: 'POST',
           headers: {
@@ -106,7 +106,7 @@ const ChannelPage = () => {
 
     const fetchChannelData = async () => {
       try {
-        const res = await fetch(`https://blend-backend.vercel.app/api/v1/users/c/${username}`, {
+        const res = await fetch(`http://localhost:8001/api/v1/users/c/${username}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${authToken}`,
@@ -124,7 +124,7 @@ const ChannelPage = () => {
 
         // Fetch playlists
         if (channel?._id) {
-          const playlistRes = await fetch(`https://blend-backend.vercel.app/api/v1/playlists/user/${channel._id}`, {
+          const playlistRes = await fetch(`http://localhost:8001/api/v1/playlists/user/${channel._id}`, {
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${authToken}`,

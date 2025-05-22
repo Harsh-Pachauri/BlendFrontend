@@ -24,7 +24,7 @@ const Homepage = () => {
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('https://blend-backend.vercel.app/api/v1/videos')
+    fetch('http://localhost:8001/api/v1/videos')
       .then((res) => res.json())
       .then((data) => setVideos(data.videos || []));
   }, []);

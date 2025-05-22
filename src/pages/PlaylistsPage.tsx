@@ -25,7 +25,7 @@ const PlaylistsPage = () => {
   useEffect(() => {
     if (user?.id) {
       axios
-        .get(`https://blend-backend.vercel.app/api/v1/playlists/user/${user.id}`, { withCredentials: true })
+        .get(`http://localhost:8001/api/v1/playlists/user/${user.id}`, { withCredentials: true })
         .then(res => setPlaylists(res.data.data))
         .catch(err => console.error('Failed to load playlists:', err));
     }
@@ -39,7 +39,7 @@ const PlaylistsPage = () => {
 
     try {
       const res = await axios.post(
-        `https://blend-backend.vercel.app/api/v1/playlists`,
+        `http://localhost:8001/api/v1/playlists`,
         formData,
         { withCredentials: true }
       );
