@@ -4,35 +4,39 @@ import { useAuth } from '../context/AuthContext';
 const SettingsPage = () => {
   const { user, updateUserProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<'profile' | 'account' | 'notifications' | 'privacy'>('profile');
-  const [username, setUsername] = useState(user?.username || '');
-  const [bio, setBio] = useState('');
-  const [email] = useState(user?.email || '');
+  // const [username, setUsername] = useState(user?.username || '');
+  // const [bio, setBio] = useState('');
+  // const [email] = useState(user?.email || '');
+    const [fullName, setFullName] = useState(user?.fullName || "");
+  const [email, setEmail] = useState(user?.email || "");
+
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
 
-  const [currentPassword, setCurrentPassword] = useState('');
+  const [oldPassword, setoldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-  const handleSaveProfile = async () => {
-    try {
-      const res = await fetch('/api/v1/users/update-account', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ username, bio }),
-      });
-      if (!res.ok) throw new Error('Failed to update profile');
-      const updatedUser = await res.json();
-      updateUserProfile(updatedUser?.data?.user);
-      alert('Profile updated!');
-    } catch (err) {
-      alert(err instanceof Error ? err.message : 'Something went wrong');
-    }
-  };
+const handleSaveProfile = async () => {
+  try {
+    const res = await fetch('http://localhost:8001/api/v1/users/update-account', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ fullName, email }), // <-- send fullName and email here
+    });
+    if (!res.ok) throw new Error('Failed to update profile');
+    const updatedUser = await res.json();
+    updateUserProfile(updatedUser?.data?.user);
+    alert('Profile updated!');
+  } catch (err) {
+    alert(err instanceof Error ? err.message : 'Something went wrong');
+  }
+};
+
 
   const handleAvatarUpload = async () => {
     if (!avatarFile) return alert('Please select an avatar image');
@@ -41,7 +45,7 @@ const SettingsPage = () => {
     formData.append('avatar', avatarFile);
 
     try {
-      const res = await fetch('/api/v1/users/update-avatar', {
+      const res = await fetch('http://localhost:8001/api/v1/users/avatar', {
         method: 'PATCH',
         credentials: 'include',
         body: formData,
@@ -62,7 +66,7 @@ const SettingsPage = () => {
     formData.append('coverImage', coverFile);
 
     try {
-      const res = await fetch('/api/v1/users/update-cover-image', {
+      const res = await fetch('http://localhost:8001/api/v1/users/cover-image', {
         method: 'PATCH',
         credentials: 'include',
         body: formData,
@@ -83,18 +87,18 @@ const SettingsPage = () => {
     }
 
     try {
-      const res = await fetch('/api/v1/users/change-password', {
+      const res = await fetch('http://localhost:8001/api/v1/users/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          currentPassword,
+          oldPassword,
           newPassword,
         }),
       });
       if (!res.ok) throw new Error('Failed to update password');
       alert('Password updated!');
-      setCurrentPassword('');
+      setoldPassword('');
       setNewPassword('');
       setConfirmNewPassword('');
     } catch (err) {
@@ -161,26 +165,27 @@ const SettingsPage = () => {
                 </button>
               </div>
 
-              {/* Username */}
-              <div>
-                <label className="block text-sm font-medium mb-1">Username</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
+{/* Full Name */}
+<div>
+  <label className="block text-sm font-medium mb-1">Full Name</label>
+  <input
+    type="text"
+    className="input"
+    value={fullName}
+    onChange={(e) => setFullName(e.target.value)}
+  />
+</div>
 
-              {/* Bio */}
-              <div>
-                <label className="block text-sm font-medium mb-1">Bio</label>
-                <textarea
-                  className="input min-h-[100px]"
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                />
-              </div>
+{/* Email */}
+<div>
+  <label className="block text-sm font-medium mb-1">Email</label>
+  <input
+    type="email"
+    className="input"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+  />
+</div>
 
               <div className="flex justify-end">
                 <button onClick={handleSaveProfile} className="btn btn-primary">
@@ -206,8 +211,8 @@ const SettingsPage = () => {
                     type="password"
                     className="input"
                     placeholder="Current Password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    value={oldPassword}
+                    onChange={(e) => setoldPassword(e.target.value)}
                   />
                   <input
                     type="password"

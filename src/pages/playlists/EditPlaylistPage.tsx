@@ -86,7 +86,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         <h1 className="text-3xl font-bold">Edit Playlist</h1>
         <button
           onClick={handleDelete}
-          className="btn bg-error-50 text-error-600 hover:bg-error-100"
+          className="btn bg-red-500 text-error-600 hover:bg-error-100"
         >
           <Trash2 className="w-5 h-5 mr-2" />
           Delete Playlist
